@@ -1,0 +1,54 @@
+1、jqueryjs主要部分
+
+① 首先依赖文件 jquery.js
+② 配置文件 config.js
+	<script type="text/javascript" src="require.js" data-main="config.js"></script>
+	
+	config.js:
+	
+	requirejs.config({
+	  baseUrl: './',          //js 依赖文件基础路径
+	  
+	  paths : {
+	  	jquery :'lib/jquery.min'
+	  }
+	  
+	  shim:{
+	  	'path/unAmd':{			//'path/unAmd' 为非AMD规范的js库 在 jqueryjs中与AMD规范同样引用  exports导入对应方法（一个）
+	  		exports:'funcName',		
+	  		}
+	  	'path/unamd2':{							//导入多个方法时
+	  		init: function(){
+	  			name1:'funcname1',
+	  			name2:'funcname2'
+	  		}
+	  	}
+	  }
+	});
+
+③ define 定义AMD 规范库，返回对象即被引用时的参数
+	define(function(){
+		return {
+			name:'ami',
+			work:function(){
+				'work';
+			}
+		}
+	})
+
+④ requirejs 可调用AMD或非AMD规范的库（需要特殊处理）
+	requirejs(['a','b'],function(a,b){
+		//a、b 为 define 返回对象
+	})
+
+⑤ require 可以调用define的库或paths中的库
+	require(['jquery'],function(jq){
+			jq 即为jquery对象
+			或者
+			require('jquery')
+		});
+		
+注： 
+1）requirejs同require，但是requirejs不能访问 path定义的值，相反require 可以访问path定义的（js文件或路径）还有其他的js文件，所以建议使用require而不是requirejs
+2）require依赖必须是直接指向js文件，而shim属性名必须和require依赖名相同（通过path定义文件路径或文件）
+		
